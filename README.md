@@ -16,7 +16,7 @@ $ python download.py
 * Chrome 브라우저가 설치되어 있어야 합니다.
 * Python3가 이미 설치되어 있어야 합니다.
 * C/C++/Python/JAVA/Text로 작성 된 소스코드만 다운로드가 가능합니다.
-* 다운로드가 완료 된 소스코드들은 "현재경로/download/"에 저장됩니다.
+* 다운로드가 완료 된 소스코드들은 "./download/"에 저장됩니다.
 
 ## 2. Chromedriver가 Permission error가 날 경우
 	
