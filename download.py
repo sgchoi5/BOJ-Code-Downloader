@@ -2,8 +2,11 @@ import sys
 import requests
 import getpass
 from bs4 import BeautifulSoup as bs
+from os import listdir
+from os.path import isfile, join
 
 url = "https://www.acmicpc.net"
+download_path = "./download"
 
 USER_INFO = {
     'id': '',
@@ -71,6 +74,13 @@ def print_downloading(x, total):
     if x == total: print(" [finished]")
 
 def make_problem_list():
+    # filelist already downloaded
+    filelist = [filename for filename in listdir(download_path) if isfile(join(download_path, filename))]
+    already_in = []
+    for filename in filelist:
+        tmp = filename.split('.')
+        already_in.append(tmp[0])
+
     soup = bs(sess.get(url + "/user/" + USER_INFO['id']).text, 'html.parser')
     problem_total_num = int(soup.find(href="/status?user_id=" + USER_INFO['id'] + "&result_id=4").string)
     problem_list = []
@@ -86,7 +96,7 @@ def make_problem_list():
 
             ProblemNum = a[1].string
             ProblemUrl = url + "/source/download/" + tr.find('td').string
-            if a[2].string.strip() in TYPE_TABLE:
+            if a[2].string.strip() in TYPE_TABLE and ProblemNum not in already_in:
                 FileName = ProblemNum + TYPE_TABLE[a[2].string.strip()]
                 problem_list.append((ProblemNum, ProblemUrl, FileName))
 
@@ -100,7 +110,7 @@ def make_problem_list():
 def sort_problem_list(problem_list):
     problem_list.sort()
     idx = 1
-    while 1:
+    while 1 and len(problem_list) > 1:
         if problem_list[idx - 1][0] == problem_list[idx][0]:
             del problem_list[idx - 1]
             idx -= 1
